@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .models import Projects as Project
 projectList = [
     {
         "id": "1",
@@ -20,21 +20,17 @@ projectList = [
 ]
 
 def projects(request):
-    page = "Projects"
-    number = 10
+    projects = Project.objects.all()
     context = {
-        'page': page,
-        'number': number,
-        'projects': projectList
+        'projects': projects
     }
     return render(request, 'projects/projects.html', context)
 
 def project(request, pk):
-    projectObj = None
-    for i in projectList:
-        if i['id'] == str(pk):
-            projectObj = i
+    projectObj = Project.objects.get(id=pk)
+    # tags = projectObj.tags.all()
     context = {
-        'project': projectObj
+        'project': projectObj,
+        # 'tags': tags
     }
     return render(request, 'projects/single-project.html', context)
