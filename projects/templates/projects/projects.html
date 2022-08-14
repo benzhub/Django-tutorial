@@ -2,7 +2,22 @@
 
 {% block content %}
 
+<p>Hello you are on the {{page}} page</p>
+
+{% if number > 10 %}
+    <p>Number is greater than 10</p>
+{% elif number == 10 %}
+    <p>Number is exactly 10</p>
+{% else %}
+    <p>Number is less than 10</p>    
+{% endif %}
+
 <h1>Projects Template</h1>
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolore autem amet at, omnis necessitatibus aliquid esse nostrum quos adipisci, mollitia commodi deserunt natus quam repellendus voluptas ipsa sed et.</p>
+<ul>
+    {% for project in projects %}
+        <!-- <li>Title: <a href="/project/{{project.id}}">{{project.title}}</a> --- {{project.description}}</li> -->
+        <li>Title: <a href="{% url 'project' projects.id %}">{{project.title}}</a> --- {{project.description}}</li>
+    {% endfor %}
+</ul>
 
 {% endblock content %}
