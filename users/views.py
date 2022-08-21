@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
+from .forms import CustomUserCreationForm
 
 def loginUser(request):
+    page = "login"
     if request.user.is_authenticated:
         return redirect("profiles")
 
@@ -32,6 +34,25 @@ def loginUser(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def registerUser(request):
+    page = 'register'
+    form = CustomUserCreationForm()
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False) # 用戶創建前資訊預處理
+            user.username = user.username.lower() # 將用戶username全部變成英文小寫
+            user.save() # 真正保存用戶資料
+
+            messages.success(request, "User account was created!")
+            # 創建帳號玩直接登入
+            login(request, user)
+            return redirect("profiles")
+        else:
+            messages.error(request, "An error has occurred during registration!")
+    context = {"page": page, "form": form}
+    return render(request, 'users/login_register.html', context)
 
 def profiles(request):
     profiles = Profile.objects.all()
