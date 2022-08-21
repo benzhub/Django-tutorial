@@ -33,6 +33,7 @@ def loginUser(request):
 
 def logoutUser(request):
     logout(request)
+    messages.info(request, "User was logged out!")
     return redirect('login')
 
 def registerUser(request):
@@ -46,7 +47,7 @@ def registerUser(request):
             user.save() # 真正保存用戶資料
 
             messages.success(request, "User account was created!")
-            # 創建帳號玩直接登入
+            # 創建帳號完直接登入
             login(request, user)
             return redirect("profiles")
         else:
