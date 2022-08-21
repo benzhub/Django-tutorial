@@ -1,9 +1,10 @@
 from django.db import models
 import uuid
-
+from users.models import Profile
 # Create your models here.
  
 class Projects(models.Model):
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL) # user被刪除的時候project不會被刪除，user的欄位被設定成null
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True) 
