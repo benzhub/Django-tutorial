@@ -3,10 +3,9 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Profile, Skill
+from .models import Profile
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
-from django.db.models import Q
-from .utils import searchProfiles
+from .utils import searchProfiles, paginateProfiles
 
 def loginUser(request):
     page = "login"
@@ -59,7 +58,8 @@ def registerUser(request):
 
 def profiles(request):
     profiles, search_query = searchProfiles(request)
-    context = {"profiles": profiles, "search_query": search_query}
+    custom_range, profiles = paginateProfiles(request, profiles, 3) # 每3個一頁
+    context = {"profiles": profiles, "search_query": search_query, "custom_range": custom_range}
     return render(request, 'users/profiles.html', context)
 
 

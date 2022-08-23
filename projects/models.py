@@ -34,6 +34,9 @@ class Review(models.Model):
     def __str__(self):
         return self.value
 
+    class Meta:
+        ordering = ['-created'] # 以時間反序
+
 class Tag(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     name = models.CharField(max_length=200)
