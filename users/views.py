@@ -13,7 +13,7 @@ def loginUser(request):
         return redirect("profiles")
 
     if request.method == "POST":
-        username = request.POST["username"]
+        username = request.POST["username"].lower()
         password = request.POST["password"]
 
         try:
@@ -26,7 +26,7 @@ def loginUser(request):
         if user is not None:
             # 在資料庫中創建session，在瀏覽器中放置cookie
             login(request, user)
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account') # 如果有存在前一頁，登入後就立即返回前一頁，如果沒有就跳轉到account頁面
         else:
             messages.error(request, "Username OR Password is incorrect!")
             # print("Username OR Password is incorrect!")

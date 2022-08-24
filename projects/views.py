@@ -1,10 +1,11 @@
+from cgi import print_directory
 from turtle import right
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Projects as Project
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from .utils import searchProjects, paginateProjects
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def projects(request):
     projects, search_query = searchProjects(request)
@@ -19,12 +20,28 @@ def projects(request):
 
 def project(request, pk):
     projectObj = Project.objects.get(id=pk)
-    # tags = projectObj.tags.all()
-    context = {
-        'project': projectObj,
-        # 'tags': tags
-    }
-    return render(request, 'projects/single-project.html', context)
+    form = ReviewForm()
+
+    if request.method == 'POST':
+        try:
+            
+            form = ReviewForm(request.POST)
+            review = form.save(commit=False)
+            review.projects = projectObj
+            review.owner = request.user.profile
+            
+            review.save()
+
+            projectObj.getVoteCount
+
+            messages.success(request, 'Your review was successfully submitted!')
+            return redirect('project', pk=projectObj.id)
+        except:
+            messages.error(request, 'Your review had some error!')
+            return redirect('project', pk=projectObj.id)
+
+
+    return render(request, 'projects/single-project.html', {'project': projectObj, 'form': form})
 
 @login_required(login_url="login") # 如果沒有登入，就重定向到登入頁面
 def createProject(request):
