@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import ProjectSerializer
 from projects.models import Projects as Project
@@ -18,7 +19,10 @@ def getRoutes(request):
     return Response(routes) 
 
 @api_view(["GET"])
+# @permission_classes([IsAuthenticated]) # 需要登入拿到token才有權限可以使用
 def getProjects(request):
+    print(f"user: {request.user}")
+    print(f"user: {request.user.id}")
     projects = Project.objects.all()
     serializer = ProjectSerializer(projects, many=True) # 返回多個就要設定many=True
     return Response(serializer.data)
