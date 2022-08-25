@@ -22,8 +22,8 @@ def getRoutes(request):
 @api_view(["GET"])
 # @permission_classes([IsAuthenticated]) # 需要登入拿到token才有權限可以使用
 def getProjects(request):
-    print(f"user: {request.user}")
-    print(f"user: {request.user.id}")
+    # print(f"user: {request.user}")
+    # print(f"user: {request.user.id}")
     projects = Project.objects.all()
     serializer = ProjectSerializer(projects, many=True) # 返回多個就要設定many=True
     return Response(serializer.data)
