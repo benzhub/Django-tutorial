@@ -22,6 +22,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.username)
+    class Meta:
+        ordering = ['created'] # 以投票率為優先排序，投票率相同，則使用投票總數排名，如果都一樣的話，就使用title排序
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.profile_image.url
+        except:
+            url = ''
+        return url
 
 class Skill(models.Model):
     owner       = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)

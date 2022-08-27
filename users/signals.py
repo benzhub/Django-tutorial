@@ -60,9 +60,13 @@ def updateProfile(sender, instance, created, **kwargs):
         print("ok")
 
 def deleteUser(sender, instance, **kwargs):
-    user = instance.user # Profile被刪除時，User也被刪除
-    user.delete()
-    print("Deleting user...")
+    try:
+        user = instance.user # Profile被刪除時，User也被刪除
+        user.delete()
+        print("Deleting user...")
+    except:
+        pass
+
     
 post_save.connect(createProfile, sender=User)
 post_save.connect(updateProfile, sender=Profile)
